@@ -46,7 +46,7 @@ A clean, fully-featured personal task manager built with React Native (Expo) and
 
 ```bash
 # 1. Clone the repository
-git clone <your-repo-url>
+git clone https://github.com/taulantukimeri/PRITECH-Task
 cd pritech-task-manager
 
 # 2. Install dependencies
