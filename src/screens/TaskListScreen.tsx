@@ -7,13 +7,12 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   StatusBar,
-  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
-import { RootStackParamList, Task } from '../types';
+import { RootStackParamList } from '../types';
 import { useTasks } from '../context/TaskContext';
 import { TaskCard } from '../components/TaskCard';
 import { EmptyState } from '../components/EmptyState';
@@ -49,17 +48,6 @@ export function TaskListScreen() {
 
   const isFiltered = search.length > 0 || filter !== 'all';
 
-  const confirmDelete = (item: Task) => {
-    Alert.alert(
-      'Delete Task',
-      `Remove "${item.title}"?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Delete', style: 'destructive', onPress: () => deleteTask(item.id) },
-      ],
-    );
-  };
-
   const handleAddSuggestion = (title: string) => {
     addTask(title, '');
   };
@@ -69,7 +57,7 @@ export function TaskListScreen() {
       task={item}
       onPress={() => navigation.navigate('TaskDetail', { taskId: item.id })}
       onToggle={() => toggleTask(item.id)}
-      onDelete={() => confirmDelete(item)}
+      onDelete={() => deleteTask(item.id)}
     />
   );
 

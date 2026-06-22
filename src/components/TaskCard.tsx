@@ -21,50 +21,43 @@ export function TaskCard({ task, onPress, onToggle, onDelete }: Props) {
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const handlePressIn = () => {
-    Animated.spring(scaleAnim, {
-      toValue: 0.97,
-      useNativeDriver: true,
-      speed: 50,
-    }).start();
+    Animated.spring(scaleAnim, { toValue: 0.97, useNativeDriver: true, speed: 50 }).start();
   };
 
   const handlePressOut = () => {
-    Animated.spring(scaleAnim, {
-      toValue: 1,
-      useNativeDriver: true,
-      speed: 50,
-    }).start();
+    Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true, speed: 50 }).start();
   };
 
   const isCompleted = task.status === 'completed';
 
   return (
     <Animated.View style={[styles.wrapper, { transform: [{ scale: scaleAnim }] }]}>
-      <TouchableOpacity
-        style={styles.card}
-        onPress={onPress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-        activeOpacity={1}
-      >
+      {/*
+        Card is a plain View — the tappable regions are siblings, not nested,
+        so touch events never conflict on Android.
+      */}
+      <View style={styles.card}>
         {/* Left accent bar */}
         <View style={[styles.accent, isCompleted && styles.accentDone]} />
 
-        {/* Checkbox */}
+        {/* Checkbox — standalone touchable */}
         <TouchableOpacity
           style={[styles.checkbox, isCompleted && styles.checkboxDone]}
           onPress={onToggle}
-          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
           {isCompleted && <Text style={styles.checkmark}>✓</Text>}
         </TouchableOpacity>
 
-        {/* Content */}
-        <View style={styles.content}>
-          <Text
-            style={[styles.title, isCompleted && styles.titleDone]}
-            numberOfLines={1}
-          >
+        {/* Main content — tapping navigates to detail */}
+        <TouchableOpacity
+          style={styles.content}
+          onPress={onPress}
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
+          activeOpacity={0.75}
+        >
+          <Text style={[styles.title, isCompleted && styles.titleDone]} numberOfLines={1}>
             {task.title}
           </Text>
           {task.description.length > 0 && (
@@ -80,9 +73,9 @@ export function TaskCard({ task, onPress, onToggle, onDelete }: Props) {
             </View>
             <Text style={styles.date}>{formatDate(task.createdAt)}</Text>
           </View>
-        </View>
+        </TouchableOpacity>
 
-        {/* Delete button */}
+        {/* Delete — sibling touchable, never competes with the content tap */}
         <TouchableOpacity
           style={styles.deleteBtn}
           onPress={onDelete}
@@ -90,7 +83,7 @@ export function TaskCard({ task, onPress, onToggle, onDelete }: Props) {
         >
           <Text style={styles.deleteIcon}>🗑</Text>
         </TouchableOpacity>
-      </TouchableOpacity>
+      </View>
     </Animated.View>
   );
 }
@@ -187,9 +180,9 @@ const styles = StyleSheet.create({
   },
   deleteBtn: {
     paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.md,
+    paddingVertical: SPACING.lg,
   },
   deleteIcon: {
-    fontSize: 16,
+    fontSize: 18,
   },
 });
