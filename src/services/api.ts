@@ -1,10 +1,10 @@
-import { Quote } from '../types';
+export interface TaskSuggestion {
+  title: string;
+}
 
-const QUOTES_URL = 'https://api.quotable.io/random?tags=inspirational,motivation';
-
-export async function fetchRandomQuote(): Promise<Quote> {
-  const response = await fetch(QUOTES_URL);
-  if (!response.ok) throw new Error('Failed to fetch quote');
+export async function fetchTaskSuggestion(): Promise<TaskSuggestion> {
+  const response = await fetch('https://dummyjson.com/todos/random');
+  if (!response.ok) throw new Error('Failed to fetch suggestion');
   const data = await response.json();
-  return { content: data.content, author: data.author };
+  return { title: data.todo as string };
 }

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   StatusBar,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -18,7 +19,7 @@ import { TaskCard } from '../components/TaskCard';
 import { EmptyState } from '../components/EmptyState';
 import { SearchBar } from '../components/SearchBar';
 import { FilterChips } from '../components/FilterChip';
-import { COLORS, SPACING, RADIUS, SHADOW } from '../components/theme';
+import { COLORS, SPACING, RADIUS } from '../components/theme';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'TaskList'>;
 
@@ -30,6 +31,7 @@ export function TaskListScreen() {
     filter,
     search,
     loading,
+    addTask,
     toggleTask,
     deleteTask,
     setFilter,
@@ -47,12 +49,27 @@ export function TaskListScreen() {
 
   const isFiltered = search.length > 0 || filter !== 'all';
 
+  const confirmDelete = (item: Task) => {
+    Alert.alert(
+      'Delete Task',
+      `Remove "${item.title}"?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', style: 'destructive', onPress: () => deleteTask(item.id) },
+      ],
+    );
+  };
+
+  const handleAddSuggestion = (title: string) => {
+    addTask(title, '');
+  };
+
   const renderTask = ({ item }: { item: Task }) => (
     <TaskCard
       task={item}
       onPress={() => navigation.navigate('TaskDetail', { taskId: item.id })}
       onToggle={() => toggleTask(item.id)}
-      onDelete={() => deleteTask(item.id)}
+      onDelete={() => confirmDelete(item)}
     />
   );
 
@@ -77,11 +94,11 @@ export function TaskListScreen() {
           </Text>
         </View>
         <TouchableOpacity
-          style={styles.fab}
+          style={styles.addBtn}
           onPress={() => navigation.navigate('AddEditTask', {})}
           activeOpacity={0.85}
         >
-          <Text style={styles.fabIcon}>+</Text>
+          <Text style={styles.addBtnIcon}>+</Text>
         </TouchableOpacity>
       </View>
 
@@ -116,7 +133,12 @@ export function TaskListScreen() {
           styles.list,
           filteredTasks.length === 0 && styles.listEmpty,
         ]}
-        ListEmptyComponent={<EmptyState isFiltered={isFiltered} />}
+        ListEmptyComponent={
+          <EmptyState
+            isFiltered={isFiltered}
+            onAddSuggestion={handleAddSuggestion}
+          />
+        }
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       />
@@ -154,7 +176,7 @@ const styles = StyleSheet.create({
     color: 'rgba(255,255,255,0.75)',
     marginTop: 2,
   },
-  fab: {
+  addBtn: {
     width: 46,
     height: 46,
     borderRadius: RADIUS.full,
@@ -164,7 +186,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: 'rgba(255,255,255,0.4)',
   },
-  fabIcon: {
+  addBtnIcon: {
     fontSize: 26,
     color: COLORS.text.inverse,
     lineHeight: 30,

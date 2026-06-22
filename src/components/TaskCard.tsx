@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Animated,
-  Alert,
 } from 'react-native';
 import { Task } from '../types';
 import { COLORS, SPACING, RADIUS, SHADOW } from './theme';
@@ -35,13 +34,6 @@ export function TaskCard({ task, onPress, onToggle, onDelete }: Props) {
       useNativeDriver: true,
       speed: 50,
     }).start();
-  };
-
-  const confirmDelete = () => {
-    Alert.alert('Delete Task', `Remove "${task.title}"?`, [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Delete', style: 'destructive', onPress: onDelete },
-    ]);
   };
 
   const isCompleted = task.status === 'completed';
@@ -93,8 +85,8 @@ export function TaskCard({ task, onPress, onToggle, onDelete }: Props) {
         {/* Delete button */}
         <TouchableOpacity
           style={styles.deleteBtn}
-          onPress={confirmDelete}
-          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          onPress={onDelete}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
           <Text style={styles.deleteIcon}>🗑</Text>
         </TouchableOpacity>

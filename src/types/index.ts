@@ -13,8 +13,3 @@ export type RootStackParamList = {
   TaskDetail: { taskId: string };
   AddEditTask: { taskId?: string };
 };
-
-export interface Quote {
-  content: string;
-  author: string;
-}
