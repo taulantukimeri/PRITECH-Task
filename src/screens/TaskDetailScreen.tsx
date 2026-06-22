@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
@@ -30,22 +29,9 @@ export function TaskDetailScreen({ route }: Props) {
   const task = getTaskById(taskId);
 
   const handleDelete = useCallback(() => {
-    Alert.alert(
-      'Delete Task',
-      `Are you sure you want to delete "${task?.title}"?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => {
-            deleteTask(taskId);
-            navigation.goBack();
-          },
-        },
-      ],
-    );
-  }, [task, taskId, deleteTask, navigation]);
+    deleteTask(taskId);
+    navigation.goBack();
+  }, [taskId, deleteTask, navigation]);
 
   if (!task) {
     return (
