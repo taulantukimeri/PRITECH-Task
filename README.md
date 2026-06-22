@@ -12,14 +12,14 @@ A clean, fully-featured personal task manager built with React Native (Expo) and
 | Add new task | ✅ |
 | Edit existing task | ✅ |
 | Mark task as completed / pending | ✅ |
-| Delete task (with confirmation) | ✅ |
+| Delete task | ✅ |
 | Task detail view | ✅ |
 | Input validation | ✅ |
 | Search tasks by title | ✅ Bonus |
 | Filter by status (All / Pending / Done) | ✅ Bonus |
 | Local persistence (AsyncStorage) | ✅ Bonus |
 | Navigation between screens | ✅ Bonus |
-| Public API integration | ✅ Quotable.io |
+| Public API integration | ✅ DummyJSON |
 
 ---
 
@@ -30,7 +30,7 @@ A clean, fully-featured personal task manager built with React Native (Expo) and
 - **React Navigation v6** — native stack navigator
 - **AsyncStorage** — local persistence across app restarts
 - **React Context + useReducer** — global state management
-- **Quotable.io API** — motivational quotes on the task detail screen
+- **DummyJSON API** — random task suggestions on the empty state screen
 
 ---
 
@@ -47,7 +47,7 @@ A clean, fully-featured personal task manager built with React Native (Expo) and
 ```bash
 # 1. Clone the repository
 git clone https://github.com/taulantukimeri/PRITECH-Task
-cd pritech-task-manager
+cd PRITECH-Task
 
 # 2. Install dependencies
 npm install
@@ -81,8 +81,8 @@ src/
 ├── context/        TaskContext — global state via useReducer + AsyncStorage sync
 ├── navigation/     AppNavigator — React Navigation native stack
 ├── screens/        TaskListScreen, TaskDetailScreen, AddEditTaskScreen
-├── services/       api.ts — Quotable.io integration
-├── types/          TypeScript interfaces (Task, Quote, navigation types)
+├── services/       api.ts — DummyJSON API integration
+├── types/          TypeScript interfaces (Task, navigation types)
 └── utils/          storage.ts (AsyncStorage), helpers.ts (ID, date formatting)
 ```
 
@@ -92,7 +92,21 @@ A single `TaskContext` backed by `useReducer` manages all task state. Every stat
 
 ### Public API
 
-The **Task Detail screen** fetches a random motivational quote from [Quotable.io](https://api.quotable.io) each time it opens. Errors are handled gracefully with a fallback message — the screen never crashes due to network issues.
+When the task list is **empty**, the app fetches a random task suggestion from [DummyJSON](https://dummyjson.com/todos/random). The user can tap **"+ Add as Task"** to add it directly, or **"🔄 Another"** to fetch a new suggestion. Errors are handled gracefully — the screen never crashes due to network issues.
+
+### Hooks used
+
+| Hook | Purpose |
+|---|---|
+| `useReducer` | Manages all task state (add, edit, delete, toggle, filter, search) |
+| `useContext` | Powers the `useTasks()` custom hook |
+| `useEffect` | Loads/saves tasks from AsyncStorage, fetches API data |
+| `useCallback` | Memoises action handlers to prevent unnecessary re-renders |
+| `useMemo` | Computes task counts without recalculating on every render |
+| `useRef` | Holds the Animated value for press scale animation on cards |
+| `useState` | Tracks form fields, validation state, and API suggestion |
+| `useNavigation` | React Navigation hook used across all screens |
+| `useTasks` | Custom hook exposing the full task state and actions |
 
 ### UI highlights
 
