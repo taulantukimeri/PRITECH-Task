@@ -87,6 +87,7 @@ export function TaskListScreen() {
           activeOpacity={0.85}
         >
           <Text style={styles.addBtnIcon}>+</Text>
+          <Text style={styles.addBtnLabel}>New Task</Text>
         </TouchableOpacity>
       </View>
 
@@ -165,20 +166,28 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   addBtn: {
-    width: 46,
-    height: 46,
-    borderRadius: RADIUS.full,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: SPACING.xs,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
+    borderRadius: RADIUS.full,
+    backgroundColor: 'rgba(255,255,255,0.2)',
     borderWidth: 1.5,
     borderColor: 'rgba(255,255,255,0.4)',
   },
   addBtnIcon: {
-    fontSize: 26,
+    fontSize: 22,
     color: COLORS.text.inverse,
-    lineHeight: 30,
-    fontWeight: '300',
+    fontWeight: '400',
+    lineHeight: 24,
+    textAlign: 'center',
+  },
+  addBtnLabel: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: COLORS.text.inverse,
   },
   progressContainer: {
     height: 3,
